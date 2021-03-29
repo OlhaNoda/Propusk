@@ -73,3 +73,7 @@ def company_admin(request):
     return render(request, 'account/company_admin.html')
 
 
+def index(request):
+    return render(request, 'account/home.html')
+
+
