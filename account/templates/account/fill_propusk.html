@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>fill_propusk</title>
+</head>
+<body>
+Внесите данные для создания пропуска <br>
+{{ request.user }} <br>
+    <form method="post" action="{% url 'fill_propusk' %}">
+        {% csrf_token %}
+        <p>Фамилия: {{ form.last_name }}</p>
+        <p>Имя: {{ form.first_name }}</p>
+        <p>Телефон: {{ form.phone }}</p><br>
+        <button type="submit" class="btn btn-success">Сохранить</button><br><br>
+        <a href="{% url 'show_propusk' %}">Показать пропуск</a>
+    </form>
+</body>
+</html>

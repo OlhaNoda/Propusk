@@ -5,15 +5,15 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Propusk</title>
+    <title>User_info</title>
 </head>
 <body>
-Пропуск<br>
+Информаця о пользователе <br>
  {% if user %}
         <div class="alert alert-warning mt-2">
             <p>{{ user.last_name }}</p>
             <p>{{ user.first_name }}</p>
-            <p>{{ qrcode }}</p>
+            <p>{{ user.phone }}</p>
         </div>
     {% else %}
         <p>Нет пропуска</p>
