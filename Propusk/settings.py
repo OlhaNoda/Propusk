@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -121,7 +122,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
 
 EMAIL_HOST = 'smtp.ukr.net'
 EMAIL_PORT = 465 #2525
@@ -129,3 +129,24 @@ EMAIL_HOST_USER = 'super_test1111@ukr.net'
 EMAIL_HOST_PASSWORD = 'spring2021!!'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
+CELERY_BROKER_URL = 'redis://{}:{}'.format(REDIS_HOST, REDIS_PORT)
+# CELERY_BROKER_URL = 'amqp://admin:123qweQQ@144.217.72.87'
+CELERY_IGNORE_RESULT = True
+CELERY_RESULT_BACKEND = "redis://{}:{}".format(REDIS_HOST, REDIS_PORT)
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'Propusk/static'),
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail, mail_admins
 from django.db.models import Count
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 import qrcode
 import pyqrcode
 import png
@@ -14,24 +14,15 @@ from .forms import *
 
 
 def gen_codes(request):
-    c = Company.objects.get(id=1)
+    c = Company.objects.get(id=2)
     for i in range(30):
         Code.objects.create(company=c, pub_key=str(uuid.uuid4())[:8], sec_key=str(uuid.uuid4())[:8])
 
 
-def gen_qrcode(data: str):
-   # qr = pyqrcode.create(data)
-   # qr = qrcode.make(data)
-
-    qr = qrcode.QRCode(version=1,
-                       error_correction=qrcode.constants.ERROR_CORRECT_L,
-                       box_size=10,
-                       border=4,
-                       )
-    qr.add_data(data)
-    qr.make(fit=True)
-    img = qr.make_image()
-    return img
+def gen_qrcode(username):
+    qr = pyqrcode.create(f'http://127.0.0.1:8000/user_info/{username}')
+    file_name = f'media/qr_codes/qr_{username}.png'
+    qr.png(file_name, scale=6)
 
 
 def index(request):
@@ -49,6 +40,7 @@ def login_user(request):
                 if not code.user:
                     user = User(username=code.pub_key)
                     user.set_password(code.sec_key)
+                    user.company = code.company
                     user.save()
                     code.user = user
                     code.save(update_fields=('user',))
@@ -61,9 +53,12 @@ def login_user(request):
                     user = User.objects.get(username=data['pub_key'])
                     if check_password(data['sec_key'], user.password):
                         login(request, user)
-                        return redirect('company_admin')
+                        if user.company_admin:
+                            return redirect('company_admin')
+                        else:
+                            return redirect('show_propusk')
                     else:
-                        error = 'Неверный пароль'
+                        error = f"Неверный пароль"
                 except ObjectDoesNotExist:
                     error = 'Неверный логин или пароль'
         else:
@@ -78,10 +73,12 @@ def login_user(request):
 
 @login_required
 def fill_propusk(request):
+    user: User = request.user
     if request.method == "POST":
-        form = RegistrationForm(request.POST, instance=request.user)
+        form = RegistrationForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            gen_qrcode(user.username)
     else:
         form = RegistrationForm(instance=request.user)
     return render(request, 'account/fill_propusk.html', context={'form': form})
@@ -89,30 +86,27 @@ def fill_propusk(request):
 
 @login_required
 def show_propusk(request):
-    context = {'user': request.user,
-               # 'qrcode': gen_qrcode(f'http://127.0.0.1:8000/user_info/{request.user.username}')
-               }
-    return render(request, 'account/propusk.html', context=context)
+    return render(request, 'account/propusk.html', context={'user': request.user})
 
 
 @login_required
 def company_admin(request):
-    # user = request.user
-    # company = user.company
+    user: User = request.user
     codes = Code.objects.all()
-    all_codes_number = Code.objects.count()
-    free_codes_number = Code.objects.filter(user_id__isnull=True).count()
+    all_codes_number = Code.objects.filter(company_id=user.company_id).count()
+    free_codes_number = Code.objects.filter(user_id__isnull=True, company_id=user.company_id).count()
     context = {
         'codes': codes,
+        'user': user,
         'all_codes_number': all_codes_number,
         'free_codes_number': free_codes_number,
-        # 'company': company
     }
     return render(request, 'account/company_admin.html', context=context)
 
 
-def show_user_info(request):
-    return render(request, 'account/user_info.html', context={'user': request.user})
+def show_user_info(request, user_name):
+    user = get_object_or_404(User, username=user_name)
+    return render(request, 'account/user_info.html', context={'user': user})
 
 """
 def registration_user(request):
@@ -145,9 +139,6 @@ def registration_user(request):
 
 
 """
-Ссылка, по которой мы будем отавать информацию о пользователе - ссылка для qr-кода
-Модуль генерирования qr кода (когда сохраняется профиль)
-Реализовать логин через модель юзера, чек пассворд. Если админ - показываем статистку по свободным кодам и сделеать форму 
-о запросе дополнитлеьных кодов.  - в виде письма главному админу
+сделеать форму о запросе дополнитлеьных кодов.  - в виде письма главному админу
 Установить docker, docker-compose (логотип синий кит)
 """

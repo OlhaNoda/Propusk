@@ -1,3 +1,6 @@
+{% load static %}
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,7 +16,7 @@
         <div class="alert alert-warning mt-2">
             <p>{{ user.last_name }}</p>
             <p>{{ user.first_name }}</p>
-            <p>{{ qrcode }}</p>
+            <img src=" {{ MEDIA_URL }}{{ 'qr_codes/qr_'}}{{user.username}}{{'.png' }}" alt="QRCode"/>
         </div>
     {% else %}
         <p>Нет пропуска</p>

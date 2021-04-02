@@ -8,16 +8,16 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Страница администратора предприятия</h1>
-<h2>Пользователи предприятия</h2>
+<h1>Страница администратора предприятия {{ user.company.name }}</h1>
+<h2>Пользователи предприятия {{ user.company.name }}</h2>
 {% if codes %}
     <p>Количество выданных ключей: {{ all_codes_number }}</p>
     <p>Количество свободных ключей: {{ free_codes_number }}</p>
-        {% for code in codes %}
-            <div class="alert alert-warning mt-2">
-                <p>Логин: {{ code.pub_key }} Пароль: {{ code.sec_key }} Пользователь: {{ code.user_id }}</p>
-            </div>
-        {% endfor %}
+{#        {% for code in codes %}#}
+{#            <div class="alert alert-warning mt-2">#}
+{#                <p>Логин: {{ code.pub_key }} Пароль: {{ code.sec_key }} Пользователь: {{ code.user_id }}</p>#}
+{#            </div>#}
+{#        {% endfor %}#}
     {% else %}
         <p>Нет кодов для пользователей</p>
     {% endif %}

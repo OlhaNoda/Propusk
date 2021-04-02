@@ -10,6 +10,7 @@ class Company(models.Model):
 class User(AbstractUser):
     phone = models.CharField(max_length=50)
     company_admin = models.BooleanField(default=False)
+    gr_code = models.ImageField(upload_to='qr_codes', blank=True)
     company = models.ForeignKey(Company, blank=True, null=True, on_delete=models.CASCADE)
 
 
