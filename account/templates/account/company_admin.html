@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>company_admin</title>
 </head>
 <body>
 <h1>Страница администратора предприятия {{ user.company.name }}</h1>
@@ -21,5 +21,6 @@
     {% else %}
         <p>Нет кодов для пользователей</p>
     {% endif %}
+<a href="{% url 'send_email_admin' %}">Отправить письмо администратору</a>
 </body>
 </html>

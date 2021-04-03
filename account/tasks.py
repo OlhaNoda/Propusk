@@ -4,8 +4,8 @@ import pyqrcode
 
 
 @shared_task
-def send_email_task():
-    send_mail('Celery Task', 'Celery Task Worked!', 'super_test1111@ukr.net', ['olga.noda@gmail.com'])
+def send_email_task(subject: str, content: str, sender: str, recipients: list[str]):
+    send_mail(subject, content, sender, recipients)
 
 
 @shared_task

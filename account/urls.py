@@ -8,4 +8,5 @@ urlpatterns = [
     path('propusk', views.show_propusk, name='show_propusk'),
     path('user_info/<str:user_name>', views.show_user_info, name='user_info'),
     path('company_admin', views.company_admin, name='company_admin'),
+    path('send_email', views.send_email_admin, name='send_email_admin'),
 ]

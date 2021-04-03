@@ -2,6 +2,7 @@ from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 from django.core.mail import send_mail, mail_admins
 from django.shortcuts import render, redirect, get_object_or_404
 import uuid
@@ -79,6 +80,11 @@ def show_propusk(request):
     return render(request, 'account/propusk.html', context={'user': request.user})
 
 
+def show_user_info(request, user_name):
+    user = get_object_or_404(User, username=user_name)
+    return render(request, 'account/user_info.html', context={'user': user})
+
+
 @login_required
 def company_admin(request):
     user: User = request.user
@@ -94,9 +100,27 @@ def company_admin(request):
     return render(request, 'account/company_admin.html', context=context)
 
 
-def show_user_info(request, user_name):
-    user = get_object_or_404(User, username=user_name)
-    return render(request, 'account/user_info.html', context={'user': user})
+@login_required
+def send_email_admin(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            try:
+                admin_emails = []
+                admins = User.objects.filter(is_superuser=True)
+                for admin in admins:
+                    admin_emails.append(admin.email)
+                data = form.cleaned_data
+                send_email_task(data['subject'], data['content'], request.user.email, admin_emails)
+                messages.success(request, 'Письмо отправлено!')
+                return redirect('send_email_admin')
+            except ObjectDoesNotExist:
+                pass
+        else:
+            messages.error(request, 'Ошибка регистрации')
+    else:
+        form = ContactForm()
+    return render(request, 'account/send_email.html')
 
 """
 def registration_user(request):
