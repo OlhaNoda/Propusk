@@ -5,7 +5,7 @@ import pyqrcode
 
 @shared_task
 def send_email_task(subject: str, content: str, sender: str, recipients: list[str]):
-    send_mail(subject, content, sender, recipients)
+    send_mail(subject, content, sender, recipients, fail_silently=False)
 
 
 @shared_task

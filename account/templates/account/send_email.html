@@ -8,7 +8,7 @@
     <title>send_email</title>
 </head>
 <body>
-Написать запрос администратору <br>
+Написать запрос главному администратору <br>
 {{ request.user }} <br>
     <form method="post" action="{% url 'send_email_admin' %}">
         {% csrf_token %}

@@ -111,16 +111,19 @@ def send_email_admin(request):
                 for admin in admins:
                     admin_emails.append(admin.email)
                 data = form.cleaned_data
-                send_email_task(data['subject'], data['content'], request.user.email, admin_emails)
-                messages.success(request, 'Письмо отправлено!')
-                return redirect('send_email_admin')
+                mail = send_email_task(data['subject'], data['content'], request.user.email, admin_emails)
+                if mail:
+                    messages.success(request, 'Письмо отправлено!')
+                    return redirect('send_email_admin')
+                else:
+                    messages.error(request, 'Ошибка отправки')
             except ObjectDoesNotExist:
                 pass
         else:
-            messages.error(request, 'Ошибка регистрации')
+            messages.error(request, 'Ошибка оправки')
     else:
         form = ContactForm()
-    return render(request, 'account/send_email.html')
+    return render(request, 'account/send_email.html', {'form': form})
 
 """
 def registration_user(request):
