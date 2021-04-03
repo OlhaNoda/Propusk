@@ -3,26 +3,16 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail, mail_admins
-from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
-import qrcode
-import pyqrcode
-import png
-from pyqrcode import QRCode
 import uuid
 from .forms import *
+from .tasks import *
 
 
 def gen_codes(request):
     c = Company.objects.get(id=2)
     for i in range(30):
         Code.objects.create(company=c, pub_key=str(uuid.uuid4())[:8], sec_key=str(uuid.uuid4())[:8])
-
-
-def gen_qrcode(username):
-    qr = pyqrcode.create(f'http://127.0.0.1:8000/user_info/{username}')
-    file_name = f'media/qr_codes/qr_{username}.png'
-    qr.png(file_name, scale=6)
 
 
 def index(request):
