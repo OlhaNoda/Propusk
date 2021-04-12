@@ -1,0 +1,17 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Generate codes
+{% endblock %}
+{% block content %}
+    <h1>Згенерувати коди для користувачів організації</h1><br/><br/>
+    <form method="post" action="{% url 'generate_codes' %}">
+        {% csrf_token %}
+        <h3>ЄДРПОУ: {{ form.company_kod }}</h3><br/>
+        <h3>Кількість кодів для генерування: {{ form.codes_number }}</h3>
+        <br/>
+        <button type="submit" class="btn btn-outline-dark btn-lg">Згенерувати</button><br><br>
+        <span>{{ message }}</span>
+    </form>
+    <br/><br/>
+    <a href="{% url 'super_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a>
+{% endblock %}

@@ -1,14 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>home</title>
-</head>
-<body>
-<h1>Домашняя страница</h1>
-<a href="{% url 'login' %}">Login</a>
-</body>
-</html>
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service
+{% endblock %}
+{% block content %}
+    <h2>Вітаємо!</h2><br/>
+    <h4>Для роботи в сервісі видачі перепусток у громадський транспорт необхідно авторизуватись.</h4><br/>
+    <h2><a href="{% url 'login' %}" class="btn btn-outline-dark btn-lg">Авторизуватись</a></h2>
+{% endblock %}

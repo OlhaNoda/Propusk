@@ -1,0 +1,15 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Registration
+{% endblock %}
+{% block content %}
+    <h2>Заповніть дані користувача</h2><br/>
+    <form method="post" action="{% url 'registration' %}">
+        {% csrf_token %}
+        <p>Прізвище: &nbsp &nbsp &nbsp {{ form.last_name }}</p>
+        <p>Ім'я: &nbsp &nbsp &nbsp  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp{{ form.first_name }}</p>
+        <p>По-батькові: &nbsp {{ form.patronymic }}</p>
+        <p>Телефон: &nbsp  &nbsp  &nbsp &nbsp {{ form.phone }}</p><br>
+        <button type="submit" class="btn btn-outline-dark btn-lg">Зберегти</button><br><br>
+    </form>
+{% endblock %}

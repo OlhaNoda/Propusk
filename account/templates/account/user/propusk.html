@@ -1,0 +1,26 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Pass
+{% endblock %}
+{% block content %}
+    <div class="card border-dark mb-3" style="max-width: 900px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ MEDIA_URL }}{{ 'qr_codes/qr_'}}{{user.username}}{{'.png' }}" class="card-img-top" alt="QRCode">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <br/>
+                    <h3 class="card-title">Перепустка у громадський транспорт</h3>
+                    <p class="card-text">Transport Pass Service</p>
+                    <h4 class="card-text">{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</h4><br/>
+                    <h4 class="card-text">{{ user.company }}</h4>
+                    <h4 class="card-text">м. Миколаїв</h4>
+
+                </div>
+            </div>
+            <a href="{% url 'export_pdf' %}" class="btn btn-outline-dark btn-lg">Завантажити</a>
+            <a href="#" class="btn btn-outline-dark btn-lg">Редагувати дані в перепустці</a>
+        </div>
+    </div>
+{% endblock %}

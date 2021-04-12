@@ -1,0 +1,10 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Super admin
+{% endblock %}
+{% block content %}
+    <h1>Кабінет адміністратора міськради</h1><br/><br/>
+    <a href="{% url 'company_info' %}" class="btn btn-outline-dark btn-lg">Подивитись інформацію по організації</a><br/><br/>
+    <a href="{% url 'create_company_admin' %}" class="btn btn-outline-dark btn-lg">Зареєструвати адміністратора організації</a><br/><br/>
+    <a href="{% url 'generate_codes' %}" class="btn btn-outline-dark btn-lg">Згенерувати коди перепусток для організації</a>
+{% endblock %}

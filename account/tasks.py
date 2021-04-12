@@ -1,6 +1,7 @@
 from celery import shared_task
 from django.core.mail import send_mail
 import pyqrcode
+import uuid
 
 
 @shared_task
@@ -15,3 +16,6 @@ def gen_qrcode(username):
     qr.png(file_name, scale=6)
 
 
+@shared_task
+def gen_code():
+    return {'username': str(uuid.uuid4())[:8], 'password': str(uuid.uuid4())[:8]}

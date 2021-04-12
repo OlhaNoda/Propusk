@@ -14,7 +14,7 @@ class LoginForm(forms.ModelForm):
 class RegistrationForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['last_name', 'first_name', 'phone']
+        fields = ['last_name', 'first_name', 'patronymic', 'phone']
 
 
 class ContactForm(forms.Form):
@@ -27,3 +27,20 @@ class ContactForm(forms.Form):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
     )
 
+
+class CompanySearchForm(forms.Form):
+    company_kod = forms.CharField(
+        label='ЄДРПОУ',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
+
+class GenerateCodesForm(forms.Form):
+    company_kod = forms.CharField(
+        label='ЄДРПОУ',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    codes_number = forms.IntegerField(
+        label='Кількість кодів',
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )

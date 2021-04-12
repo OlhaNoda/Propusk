@@ -1,20 +1,14 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
-</head>
-<body>
- <h1>Авторизация</h1>
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Login
+{% endblock %}
+{% block content %}
+ <h1>Авторизація</h1><br/>
     <form method="post">
         {% csrf_token %}
-        <p>Логин: &nbsp {{ form.pub_key }}</p>
+        <p>Логін: &nbsp &nbsp {{ form.pub_key }}</p>
         <p>Пароль: {{ form.sec_key }}</p><br>
-        <button type="submit" class="btn btn-success"> Войти </button><br><br>
+        <button type="submit" class="btn btn-outline-dark btn-lg"> Авторизуватись </button><br><br>
         <span>{{ error }}</span>
     </form>
-</body>
-</html>
+{% endblock %}

@@ -4,13 +4,16 @@ from django.contrib.auth.models import AbstractUser
 
 class Company(models.Model):
     name = models.CharField(max_length=255)
-    kod = models.CharField(max_length=8)
+    kod = models.CharField(max_length=8, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class User(AbstractUser):
+    patronymic = models.CharField(max_length=100)
     phone = models.CharField(max_length=50)
     company_admin = models.BooleanField(default=False)
-    gr_code = models.ImageField(upload_to='qr_codes', blank=True)
     company = models.ForeignKey(Company, blank=True, null=True, on_delete=models.CASCADE)
 
 
