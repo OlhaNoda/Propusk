@@ -6,12 +6,16 @@
 <h1>Додати адміністратора організації</h1><br/>
     <form method="post" action="{% url 'create_company_admin' %}">
         {% csrf_token %}
-        <p>ЄДРПОУ: {{ form.company_kod }}</p><br>
+        <h4>ЄДРПОУ: {{ form.company_kod }}</h4><br/>
         <button type="submit" class="btn btn-outline-dark btn-lg">Зареєструвати</button><br/><br/>
-        <span>{{ user.company.kod }}</span><br/>
-        <span>{{ user.company }}</span><br/>
-        <span>{{ message }}</span>
+        <a href="{% url 'super_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a><br/><br/>
+        {% if user.company %}
+            <h4>Адміністратора зареєстровано!</h4>
+            <span>ЄДРПОУ: {{ user.company.kod }}</span><br/>
+            <span>Назва організації: {{ user.company }}</span><br/>
+            <p>Параметри для входу:</p>
+        {% endif %}
+        <span>{{ message }}</span><br/>
     </form>
     <br/><br/>
-    <a href="{% url 'super_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a>
 {% endblock %}

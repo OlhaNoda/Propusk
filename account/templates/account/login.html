@@ -6,8 +6,10 @@
  <h1>Авторизація</h1><br/>
     <form method="post">
         {% csrf_token %}
-        <p>Логін: &nbsp &nbsp {{ form.pub_key }}</p>
-        <p>Пароль: {{ form.sec_key }}</p><br>
+        <h5>Логін:</h5>
+        <p>{{ form.pub_key }}</p>
+        <h5>Пароль:</h5>
+        <p>{{ form.sec_key }}</p><br>
         <button type="submit" class="btn btn-outline-dark btn-lg"> Авторизуватись </button><br><br>
         <span>{{ error }}</span>
     </form>

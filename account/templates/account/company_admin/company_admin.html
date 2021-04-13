@@ -5,19 +5,17 @@
 
 {% block content %}
     <h1>Кабінет адміністратора організації</h1>
-    <h2>{{ user.company.name }}</h2><br/><br/>
+    <h3>{{ user.company.name }}</h3><br/><br/>
     <h3>Дані щодо використання ключів реєстрації:</h3><br/>
-    {% if codes %}
+    {% if all_codes_number %}
         <p>Кількість виданих ключів: {{ all_codes_number }}</p>
         <p>Кількість вільних ключів: {{ free_codes_number }}</p>
-    {#        {% for code in codes %}#}
-    {#            <div class="alert alert-warning mt-2">#}
-    {#                <p>Логин: {{ code.pub_key }} Пароль: {{ code.sec_key }} Пользователь: {{ code.user_id }}</p>#}
-    {#            </div>#}
-    {#        {% endfor %}#}
     {% else %}
-        <p>Нет кодов для пользователей</p>
+        <p>Немає ключів у організації</p>
     {% endif %}
     <br/>
+    <a href="{% url 'show_free_codes' %}" class="btn btn-outline-dark btn-lg">Вільні ключі реєстрації</a><br/><br/>
+    <a href="{% url 'register_user_by_admin' %}" class="btn btn-outline-dark btn-lg">Зареєструвати користувача</a><br/><br/>
+    <a href="#" class="btn btn-outline-dark btn-lg">Видалити ключ та користувача</a><br/><br/>
     <a href="{% url 'send_email_admin' %}" class="btn btn-outline-dark btn-lg">Надіслати запит на отримання додаткових ключів</a>
 {% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Delete user code
+{% endblock %}
+{% block content %}
+    <h1>Вільні ключі:</h1><br/>
+    {% for code in free_codes %}
+        <p>Логін: {{ code.pub_key }} Пароль: {{ code.sec_key }}</p>
+    {% endfor %}
+    <a href="{% url 'company_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a><br/><br/>
+{% endblock %}

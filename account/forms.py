@@ -12,9 +12,22 @@ class LoginForm(forms.ModelForm):
 
 
 class RegistrationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['patronymic'].widget.attrs.update({'class': 'form-control'})
+        self.fields['birthdate'].widget.attrs.update({'class': 'form-control'})
+
+    def clean_birthdate(self):
+        val = self.cleaned_data['birthdate']
+        print(val, type(val))
+        return val
+
+
     class Meta:
         model = User
-        fields = ['last_name', 'first_name', 'patronymic', 'phone']
+        fields = ['last_name', 'first_name', 'patronymic', 'birthdate']
 
 
 class ContactForm(forms.Form):
@@ -43,4 +56,28 @@ class GenerateCodesForm(forms.Form):
     codes_number = forms.IntegerField(
         label='Кількість кодів',
         widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+
+
+class RegistrationByAdminForm(forms.Form):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=8
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        max_length=8
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    patronymic = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=100
+    )
+    birthdate = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control'}),
     )

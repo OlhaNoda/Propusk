@@ -10,17 +10,18 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <br/>
+
                     <h3 class="card-title">Перепустка у громадський транспорт</h3>
                     <p class="card-text">Transport Pass Service</p>
-                    <h4 class="card-text">{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</h4><br/>
+                    <h4 class="card-text">{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</h4>
+                    <p class="card-text">{{ user.birthdate|date:"d-m-Y" }}</p><br/>
                     <h4 class="card-text">{{ user.company }}</h4>
                     <h4 class="card-text">м. Миколаїв</h4>
 
                 </div>
             </div>
             <a href="{% url 'export_pdf' %}" class="btn btn-outline-dark btn-lg">Завантажити</a>
-            <a href="#" class="btn btn-outline-dark btn-lg">Редагувати дані в перепустці</a>
+            <a href="{% url 'registration' %}" class="btn btn-outline-dark btn-lg">Редагувати дані в перепустці</a>
         </div>
     </div>
 {% endblock %}

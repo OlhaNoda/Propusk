@@ -12,6 +12,7 @@ class Company(models.Model):
 
 class User(AbstractUser):
     patronymic = models.CharField(max_length=100)
+    birthdate = models.DateField(null=True)
     phone = models.CharField(max_length=50)
     company_admin = models.BooleanField(default=False)
     company = models.ForeignKey(Company, blank=True, null=True, on_delete=models.CASCADE)
