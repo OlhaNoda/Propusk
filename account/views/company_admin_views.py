@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from account.forms import *
 from account.tasks import *
 from xhtml2pdf import pisa
+from Propusk import settings
 
 
 @login_required
@@ -35,40 +36,44 @@ def show_free_codes(request):
 
 
 @login_required
+def register_code_by_admin(request, pub_key):
+    try:
+        code = Code.objects.get(pub_key=pub_key)
+        if not code.user:
+            user = User(username=pub_key)
+            user.set_password(code.sec_key)
+            user.company = code.company
+            user.save()
+            code.user = user
+            code.save(update_fields=('user',))
+            request.session['username'] = user.username
+            return redirect('register_user_by_admin')
+        message = 'Користувача з цими параметрами вже зареєстровано раніше'
+        return render(request, 'account/company_admin/show_free_codes.html', context={'message': message})
+    except ObjectDoesNotExist:
+        message = 'Невірний логін/пароль'
+    return render(request, 'account/company_admin/show_free_codes.html', context={'message': message})
+
+
+@login_required
 def register_user_by_admin(request):
-    admin: User = request.user
+    user = User.objects.get(username=request.session.get('username'))
     message = ''
     if request.method == "POST":
-        form = RegistrationByAdminForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            try:
-                code = Code.objects.get(pub_key=data['username'], sec_key=data['password'], company=admin.company)
-                if not code.user:
-                    user = User(username=code.pub_key)
-                    user.set_password(code.sec_key)
-                    user.company = code.company
-                    user.last_name = data['last_name']
-                    user.first_name = data['first_name']
-                    user.patronymic = data['patronymic']
-                    user.birthdate = data['birthdate']
-                    user.save()
-                    code.user = user
-                    code.save(update_fields=('user',))
-                    gen_qrcode(user.username)
-                    request.session['username'] = user.username
-                    return redirect('show_transport_pass_by_admin')
-                message = 'Користувача з цими параметрами вже зареєстровано раніше'
-                context = {
-                    'form': form,
-                    'message': message
-                }
-                return render(request, 'account/company_admin/register_user.html', context=context)
-            except ObjectDoesNotExist:
-                message = 'Невірний логін/пароль'
+            user.last_name = data['last_name']
+            user.first_name = data['first_name']
+            user.patronymic = data['patronymic']
+            user.birthdate = data['birthdate']
+            user.save()
+            gen_qrcode(user.username)
+            request.session['username'] = user.username
+            return redirect('show_transport_pass_by_admin')
         else:
             message = 'Форму заповнено не коректно'
-    form = RegistrationByAdminForm()
+    form = RegistrationForm()
     context = {
         'form': form,
         'message': message
@@ -123,6 +128,8 @@ def delete_user_by_admin(request):
 
 @login_required
 def send_email_admin(request):
+    message = ''
+    user: User = request.user
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -132,16 +139,25 @@ def send_email_admin(request):
                 for admin in admins:
                     admin_emails.append(admin.email)
                 data = form.cleaned_data
-                mail = send_email_task(data['subject'], data['content'], 'super_test1111@ukr.net', admin_emails)
-                if mail:
-                    messages.success(request, 'Письмо отправлено!')
-                    return redirect('send_email_admin')
-                else:
-                    messages.error(request, 'Ошибка отправки')
+                mail = send_email_task(
+                    f'Додаткові ключі для {user.company.name} ({user.company.kod})',
+                    data['content'],
+                    settings.EMAIL_HOST_USER,
+                    admin_emails
+                )
+                message = 'Лист надіслано!'
+                context = {
+                    'form': form,
+                    'message': message
+                }
+                return render(request, 'account/company_admin/send_email.html', context=context)
             except ObjectDoesNotExist:
-                pass
+                message = 'Поштову адресу адміністратора не знайдено'
         else:
-            messages.error(request, 'Ошибка оправки')
-    else:
-        form = ContactForm()
-    return render(request, 'account/company_admin/send_email.html', {'form': form})
+            message = 'Форму заповнено не коректно'
+    form = ContactForm()
+    context = {
+        'form': form,
+        'message': message
+    }
+    return render(request, 'account/company_admin/send_email.html', context=context)

@@ -1,19 +1,15 @@
 {% extends 'account/base.html' %}
 {% block title %}
-    Transport Pass Service | Register user
+    Transport Pass Service | Registration
 {% endblock %}
 {% block content %}
- <h1>Реєстрація користувача</h1><br/>
-    <form method="post">
+    <h2>Заповніть дані користувача</h2><br/>
+    <form method="post" action="{% url 'register_user_by_admin' %}">
         {% csrf_token %}
-        <p>Логін: {{ form.username }}</p>
-        <p>Пароль: {{ form.password }}</p>
         <p>Прізвище: {{ form.last_name }}</p>
         <p>Ім'я: {{ form.first_name }}</p>
         <p>По-батькові: {{ form.patronymic }}</p>
         <p>Дата народження (1999-01-01): {{ form.birthdate }}</p><br>
-        <button type="submit" class="btn btn-outline-dark btn-lg"> Зареєструвати </button><br><br>
-        <a href="{% url 'company_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a><br/><br/>
-        <span>{{ message }}</span>
+        <button type="submit" class="btn btn-outline-dark btn-lg">Зберегти</button><br><br>
     </form>
 {% endblock %}

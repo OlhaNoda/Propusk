@@ -129,12 +129,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
-EMAIL_HOST = 'smtp.ukr.net'
-EMAIL_PORT = 465 #2525
-EMAIL_HOST_USER = 'super_test1111@ukr.net'
-EMAIL_HOST_PASSWORD = 'spring2021!!'
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'TransportPassService@gmail.com'
+EMAIL_HOST_PASSWORD = 'transport2021'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379

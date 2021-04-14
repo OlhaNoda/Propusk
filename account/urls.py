@@ -13,6 +13,7 @@ urlpatterns = [
     path('company_admin', company_admin_views.company_admin, name='company_admin'),
     path('company_admin/send_email', company_admin_views.send_email_admin, name='send_email_admin'),
     path('company_admin/free_codes', company_admin_views.show_free_codes, name='show_free_codes'),
+    path('company_admin/register_code/<str:pub_key>', company_admin_views.register_code_by_admin, name='register_code_by_admin'),
     path('company_admin/register_user', company_admin_views.register_user_by_admin, name='register_user_by_admin'),
     path('company_admin/transport_pass', company_admin_views.show_transport_pass_by_admin, name='show_transport_pass_by_admin'),
     path('company_admin/transport_pass_pdf', company_admin_views.export_pdf_by_admin, name='export_pdf_by_admin'),

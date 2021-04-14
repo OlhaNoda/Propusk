@@ -7,8 +7,9 @@
     <h2>Запит на отримання додаткових ключів</h2><br/>
     <form method="post" action="{% url 'send_email_admin' %}">
         {% csrf_token %}
-        <p>Тема: {{ form.subject }}</p>
-        <p>Текст: {{ form.content }}</p><br>
+        <p>Текст запиту: {{ form.content }}</p><br>
         <button type="submit" class="btn btn-outline-dark btn-lg">Надіслати</button><br><br>
+        <a href="{% url 'company_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a><br/><br/>
+        <p> {{ message }}</p><br>
     </form>
 {% endblock %}
