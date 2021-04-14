@@ -16,6 +16,6 @@
     <br/>
     <a href="{% url 'show_free_codes' %}" class="btn btn-outline-dark btn-lg">Вільні ключі реєстрації</a><br/><br/>
     <a href="{% url 'register_user_by_admin' %}" class="btn btn-outline-dark btn-lg">Зареєструвати користувача</a><br/><br/>
-    <a href="#" class="btn btn-outline-dark btn-lg">Видалити ключ та користувача</a><br/><br/>
+    <a href="{% url 'delete_user_by_admin' %}" class="btn btn-outline-dark btn-lg">Видалити користувача</a><br/><br/>
     <a href="{% url 'send_email_admin' %}" class="btn btn-outline-dark btn-lg">Надіслати запит на отримання додаткових ключів</a>
 {% endblock %}

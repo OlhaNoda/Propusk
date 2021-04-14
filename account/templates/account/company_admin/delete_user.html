@@ -1,0 +1,15 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Delete user
+{% endblock %}
+{% block content %}
+    <h1>Видалити користувача з бази даних перепусток</h1><br/>
+    <form method="post" action="{% url 'delete_user_by_admin' %}">
+        {% csrf_token %}
+        <h4>Username: {{ form.username }}</h4><br/>
+        <br/>
+        <button type="submit" class="btn btn-outline-dark btn-lg">Видалити</button><br><br>
+        <a href="{% url 'company_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a><br/><br/>
+        <span>{{ message }}</span>
+    </form>
+{% endblock %}

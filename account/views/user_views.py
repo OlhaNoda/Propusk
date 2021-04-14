@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.shortcuts import render, redirect, get_object_or_404
@@ -40,7 +41,6 @@ def export_pdf(request):
     template_path = 'account/user/transport_pass_pdf.html'
     context = {'user': user}
     response = HttpResponse(content_type='application/pdf')
-   # response['Content-Disposition'] = 'attachment; filename="transport_pass.pdf'
     response['Content-Disposition'] = 'filename="transport_pass.pdf'
     template = get_template(template_path)
     html = template.render(context)
@@ -55,21 +55,29 @@ def change_password(request):
     message = ''
     user: User = request.user
     if request.method == "POST":
-        form = ChangePasswordForm(request.POST, instance=user)
+        form = ChangePasswordForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            form.save()
-            user.set_password(data['sec_key'])
-            user.save()
-            message = 'Пароль змінено!'
-            context = {
-                'form': form,
-                'message': message
-            }
-            return render(request, 'account/user/change_password.html', context=context)
+            try:
+                code = Code.objects.get(pub_key=user.username)
+                if code.sec_key == data['old_password']:
+                    code.sec_key = data['new_password']
+                    code.save()
+                    user.set_password(data['new_password'])
+                    user.save()
+                    return redirect('login')
+                else:
+                    message = 'Невірний старий пароль'
+            except ObjectDoesNotExist:
+                message = 'Користувача не знайдено'
+                context = {
+                    'form': form,
+                    'message': message
+                }
+                return render(request, 'account/user/change_password.html', context=context)
         else:
             message = 'Форма заповнена не коректно'
-    form = ChangePasswordForm(instance=user)
+    form = ChangePasswordForm()
     context = {
         'form': form,
         'message': message

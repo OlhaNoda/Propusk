@@ -84,7 +84,7 @@ def show_transport_pass_by_admin(request):
 
 
 @login_required
-def export_pdf(request):
+def export_pdf_by_admin(request):
     user = User.objects.get(username=request.session.get('username'))
     template_path = 'account/user/transport_pass_pdf.html'
     context = {'user': user}
@@ -96,6 +96,29 @@ def export_pdf(request):
     if pisa_status.err:
         return HttpResponse('Errors' + html + '</pre>')
     return response
+
+
+@login_required
+def delete_user_by_admin(request):
+    message = ''
+    if request.method == "POST":
+        form = UserSearchForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            try:
+                user = User.objects.get(username=data['username'])
+                user.delete()
+                message = 'Користувача видалено'
+            except ObjectDoesNotExist:
+                message = 'Користувача не знайдено'
+        else:
+            message = 'Форму заповнено не коректно'
+    form = UserSearchForm()
+    context = {
+        'form': form,
+        'message': message
+    }
+    return render(request, 'account/company_admin/delete_user.html', context=context)
 
 
 @login_required

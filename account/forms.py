@@ -11,13 +11,15 @@ class LoginForm(forms.ModelForm):
         }
 
 
-class ChangePasswordForm(forms.ModelForm):
-    class Meta:
-        model = Code
-        fields = ['sec_key']
-        widgets = {
-            'sec_key': forms.PasswordInput
-        }
+class ChangePasswordForm(forms.Form):
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        max_length=8
+    )
+    new_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        max_length=8
+    )
 
 
 class RegistrationForm(forms.ModelForm):
@@ -32,7 +34,6 @@ class RegistrationForm(forms.ModelForm):
         val = self.cleaned_data['birthdate']
         print(val, type(val))
         return val
-
 
     class Meta:
         model = User
@@ -53,6 +54,12 @@ class ContactForm(forms.Form):
 class CompanySearchForm(forms.Form):
     company_kod = forms.CharField(
         label='ЄДРПОУ',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
+
+class UserSearchForm(forms.Form):
+    username = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
