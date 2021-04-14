@@ -1,1 +1,1 @@
-web: gunicorn Propusk.wsgi --log-file
+web: gunicorn Propusk.wsgi
