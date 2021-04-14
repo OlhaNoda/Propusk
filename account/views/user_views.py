@@ -8,6 +8,33 @@ from xhtml2pdf import pisa
 
 
 @login_required
+def user(request):
+    return render(request, 'account/user/user.html')
+
+
+@login_required
+def registration(request):
+    user: User = request.user
+    if request.method == "POST":
+        form = RegistrationForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            if not user.company_admin:
+                gen_qrcode(user.username)
+                return redirect('show_transport_pass')
+            else:
+                return redirect('company_admin')
+    else:
+        form = RegistrationForm(instance=user)
+    return render(request, 'account/user/registration.html', context={'form': form})
+
+
+@login_required
+def show_transport_pass(request):
+    return render(request, 'account/user/transport_pass.html', context={'user': request.user})
+
+
+@login_required
 def export_pdf(request):
     user = request.user
     template_path = 'account/user/transport_pass_pdf.html'
@@ -24,25 +51,30 @@ def export_pdf(request):
 
 
 @login_required
-def registration(request):
+def change_password(request):
+    message = ''
     user: User = request.user
     if request.method == "POST":
-        form = RegistrationForm(request.POST, instance=user)
+        form = ChangePasswordForm(request.POST, instance=user)
         if form.is_valid():
+            data = form.cleaned_data
             form.save()
-            if not user.company_admin:
-                gen_qrcode(user.username)
-                return redirect('show_propusk')
-            else:
-                return redirect('company_admin')
-    else:
-        form = RegistrationForm(instance=user)
-    return render(request, 'account/user/registration.html', context={'form': form})
-
-
-@login_required
-def show_propusk(request):
-    return render(request, 'account/user/propusk.html', context={'user': request.user})
+            user.set_password(data['sec_key'])
+            user.save()
+            message = 'Пароль змінено!'
+            context = {
+                'form': form,
+                'message': message
+            }
+            return render(request, 'account/user/change_password.html', context=context)
+        else:
+            message = 'Форма заповнена не коректно'
+    form = ChangePasswordForm(instance=user)
+    context = {
+        'form': form,
+        'message': message
+    }
+    return render(request, 'account/user/change_password.html', context=context)
 
 
 def show_user_info(request, user_name):

@@ -1,0 +1,9 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | User
+{% endblock %}
+{% block content %}
+    <h1>Кабінет користувача</h1><br/><br/>
+    <a href="{% url 'show_transport_pass' %}" class="btn btn-outline-dark btn-lg">Перепустка</a><br/><br/>
+    <a href="{% url 'change_password' %}" class="btn btn-outline-dark btn-lg">Змінити пароль</a><br/><br/>
+{% endblock %}

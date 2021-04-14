@@ -11,6 +11,15 @@ class LoginForm(forms.ModelForm):
         }
 
 
+class ChangePasswordForm(forms.ModelForm):
+    class Meta:
+        model = Code
+        fields = ['sec_key']
+        widgets = {
+            'sec_key': forms.PasswordInput
+        }
+
+
 class RegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
