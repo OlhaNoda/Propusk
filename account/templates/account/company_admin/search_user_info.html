@@ -1,0 +1,27 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Users info
+{% endblock %}
+{% block content %}
+    <h1>Інформація про користувачів:</h1><br/>
+    <form method="post" action="{% url 'search_user_info' %}">
+        {% csrf_token %}
+        <h4>Прізвище: {{ form.last_name }}</h4><br/>
+        <button type="submit" class="btn btn-outline-dark btn-lg">Отримати дані</button><br/><br/>
+        <a href="{% url 'company_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a><br/><br/>
+        <span>{{ message }}</span><br/><br/>
+        {% if codes %}
+            {% for code in codes %}
+                <p>Логін: {{ code.pub_key }} Пароль: {{ code.sec_key }}</p>
+                <p>ПІБ: {{ code.user.last_name }} {{ code.user.first_name }} {{ code.user.patronymic }}</p>
+                <p>Дата народження: {{ code.user.birthdate|date:"d-m-Y"  }}</p>
+                <a href="{% url 'show_user_transport_pass' code.pub_key %}" class="btn btn-outline-dark btn-lg">Перепустка</a>
+                <a href="{% url 'change_user' code.pub_key %}" class="btn btn-outline-dark btn-lg">Редагувати</a>
+                <a href="{% url 'delete_user' code.pub_key %}" class="btn btn-outline-dark btn-lg">Видалити</a>
+                <hr />
+            {% endfor %}
+            <br/>
+        {% endif %}
+    </form>
+    <br/><br/>
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import get_template
-from django.contrib import messages
+from django.contrib.auth.hashers import check_password
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from account.forms import *
@@ -104,29 +104,6 @@ def export_pdf_by_admin(request):
 
 
 @login_required
-def delete_user_by_admin(request):
-    message = ''
-    if request.method == "POST":
-        form = UserSearchForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            try:
-                user = User.objects.get(username=data['username'])
-                user.delete()
-                message = 'Користувача видалено'
-            except ObjectDoesNotExist:
-                message = 'Користувача не знайдено'
-        else:
-            message = 'Форму заповнено не коректно'
-    form = UserSearchForm()
-    context = {
-        'form': form,
-        'message': message
-    }
-    return render(request, 'account/company_admin/delete_user.html', context=context)
-
-
-@login_required
 def send_email_admin(request):
     message = ''
     user: User = request.user
@@ -161,3 +138,114 @@ def send_email_admin(request):
         'message': message
     }
     return render(request, 'account/company_admin/send_email.html', context=context)
+
+
+@login_required
+def show_users_info(request):
+    admin: User = request.user
+    codes = Code.objects.filter(user_id__isnull=False, company=admin.company)
+    context = {
+        'admin': admin,
+        'codes': codes
+    }
+    return render(request, 'account/company_admin/users_info.html', context=context)
+
+
+@login_required
+def search_user_info(request):
+    admin: User = request.user
+    message = ''
+    if request.method == "POST":
+        form = UserSearchForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            users_list = User.objects.filter(last_name=data['last_name'], company=admin.company)
+            codes = Code.objects.filter(user__in=users_list)
+            if not codes:
+                message = 'Користувачів не знайдено'
+            context = {
+                'form': form,
+                'message': message,
+                'codes': codes
+            }
+            return render(request, 'account/company_admin/search_user_info.html', context=context)
+        else:
+            message = 'Форму заповнено не коректно'
+    form = UserSearchForm()
+    context = {
+        'form': form,
+        'message': message,
+    }
+    return render(request, 'account/company_admin/search_user_info.html', context=context)
+
+
+@login_required
+def delete_user(request, user_name):
+    try:
+        user = User.objects.get(username=user_name)
+        user.delete()
+        message = 'Користувача видалено'
+    except ObjectDoesNotExist:
+        message = 'Користувача не знайдено'
+    form = UserSearchForm()
+    context = {
+        'form': form,
+        'message': message,
+    }
+    return render(request, 'account/company_admin/search_user_info.html', context=context)
+
+
+@login_required
+def show_user_transport_pass(request, user_name):
+    user = User.objects.get(username=user_name)
+    return render(request, 'account/company_admin/show_transport_pass.html', context={'user': user})
+
+
+@login_required
+def change_user(request, user_name):
+    user = User.objects.get(username=user_name)
+    message = ''
+    if request.method == "POST":
+        form = RegistrationForm(request.POST, instance=user)
+        if form.is_valid():
+            data = form.cleaned_data
+            user.last_name = data['last_name']
+            user.first_name = data['first_name']
+            user.patronymic = data['patronymic']
+            user.birthdate = data['birthdate']
+            user.save()
+            request.session['username'] = user.username
+            return redirect('show_transport_pass_by_admin')
+        else:
+            message = 'Форму заповнено не коректно'
+    form = RegistrationForm(instance=user)
+    context = {
+        'form': form,
+        'message': message,
+        'user': user
+    }
+    return render(request, 'account/company_admin/change_user.html', context=context)
+
+
+@login_required
+def change_admin_password(request):
+    message = ''
+    user: User = request.user
+    if request.method == "POST":
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if check_password(data['old_password'], user.password):
+                user.set_password(data['new_password'])
+                user.save()
+                return redirect('login')
+            else:
+                message = 'Невірний старий пароль'
+        else:
+            message = 'Форма заповнена не коректно'
+    form = ChangePasswordForm()
+    context = {
+        'form': form,
+        'message': message
+    }
+    return render(request, 'account/company_admin/change_admin_password.html', context=context)

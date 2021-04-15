@@ -1,0 +1,14 @@
+{% extends 'account/base.html' %}
+{% block title %}
+    Transport Pass Service | Users info
+{% endblock %}
+{% block content %}
+    <h1>Користувачі організації {{ admin.company.name }}</h1><br/>
+    {% for code in codes %}
+        <p>Логін: {{ code.pub_key }} Пароль: {{ code.sec_key }}</p>
+        <p>ПІБ: {{ code.user.last_name }} {{ code.user.first_name }} {{ code.user.patronymic }}</p>
+        <p>Дата народження: {{ code.user.birthdate|date:"d-m-Y"  }}</p>
+        <hr />
+    {% endfor %}
+    <a href="{% url 'company_admin' %}" class="btn btn-outline-dark btn-lg">Назад</a><br/><br/>
+{% endblock %}
