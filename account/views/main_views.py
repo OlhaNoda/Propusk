@@ -17,8 +17,8 @@ def login_user(request):
             data = form.cleaned_data
             try:
                 if not User.objects.all():
-                    user = User(username='superadmin', is_superuser=True)
-                    user.set_password('superadmin')
+                    user = User(username='sadmin', is_superuser=True)
+                    user.set_password('sadmin')
                     user.save()
                     login(request, user)
                     return redirect('super_admin')
