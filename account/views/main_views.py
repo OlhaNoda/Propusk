@@ -20,6 +20,8 @@ def login_user(request):
                     user = User(username='superadmin', is_superuser=True)
                     user.set_password('superadmin')
                     user.save()
+                    login(request, user)
+                    return redirect('super_admin')
                 else:
                     code = Code.objects.get(pub_key=data['pub_key'], sec_key=data['sec_key'])
                     if not code.user:
