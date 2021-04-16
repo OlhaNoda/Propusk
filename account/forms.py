@@ -20,6 +20,10 @@ class ChangePasswordForm(forms.Form):
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         max_length=8
     )
+    new_password_repeat = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        max_length=8
+    )
 
 
 class RegistrationForm(forms.ModelForm):

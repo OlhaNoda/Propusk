@@ -235,12 +235,12 @@ def change_admin_password(request):
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            if check_password(data['old_password'], user.password):
+            if check_password(data['old_password'], user.password) and data['new_password'] == data['new_password_repeat']:
                 user.set_password(data['new_password'])
                 user.save()
                 return redirect('login')
             else:
-                message = 'Невірний старий пароль'
+                message = 'Невірний старий пароль/Нові паролі не співпадають'
         else:
             message = 'Форма заповнена не коректно'
     form = ChangePasswordForm()

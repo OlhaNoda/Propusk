@@ -60,14 +60,14 @@ def change_password(request):
             data = form.cleaned_data
             try:
                 code = Code.objects.get(pub_key=user.username)
-                if code.sec_key == data['old_password']:
+                if code.sec_key == data['old_password'] and data['new_password'] == data['new_password_repeat']:
                     code.sec_key = data['new_password']
                     code.save()
                     user.set_password(data['new_password'])
                     user.save()
                     return redirect('login')
                 else:
-                    message = 'Невірний старий пароль'
+                    message = 'Невірний старий пароль/Нові паролі не співпадають'
             except ObjectDoesNotExist:
                 message = 'Користувача не знайдено'
                 context = {
