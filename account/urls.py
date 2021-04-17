@@ -3,6 +3,7 @@ from .views import super_admin_views, main_views, company_admin_views, user_view
 
 urlpatterns = [
     path('', main_views.index, name='home'),
+    path('about', main_views.about, name='about'),
     path('login', main_views.login_user, name='login'),
     path('registration', user_views.registration, name='registration'),
     path('user', user_views.user, name='user'),

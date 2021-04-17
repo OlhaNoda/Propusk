@@ -16,25 +16,18 @@ def login_user(request):
         if form.is_valid():
             data = form.cleaned_data
             try:
-                if not User.objects.all():
-                    user = User(username='sadmin', is_superuser=True)
-                    user.set_password('sadmin')
+                code = Code.objects.get(pub_key=data['pub_key'], sec_key=data['sec_key'])
+                if not code.user:
+                    user = User(username=code.pub_key)
+                    user.set_password(code.sec_key)
+                    user.company = code.company
                     user.save()
-                    login(request, user)
-                    return redirect('super_admin')
-                else:
-                    code = Code.objects.get(pub_key=data['pub_key'], sec_key=data['sec_key'])
-                    if not code.user:
-                        user = User(username=code.pub_key)
-                        user.set_password(code.sec_key)
-                        user.company = code.company
-                        user.save()
-                        code.user = user
-                        code.save(update_fields=('user',))
-                        login(request, code.user)
-                        return redirect('registration')
+                    code.user = user
+                    code.save(update_fields=('user',))
                     login(request, code.user)
-                    return redirect('user')
+                    return redirect('registration')
+                login(request, code.user)
+                return redirect('user')
             except ObjectDoesNotExist:
                 try:
                     user = User.objects.get(username=data['pub_key'])
@@ -61,3 +54,7 @@ def login_user(request):
         'error': error
     }
     return render(request, 'account/login.html', context)
+
+
+def about(request):
+    return render(request, 'account/about.html')

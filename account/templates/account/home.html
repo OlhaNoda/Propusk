@@ -3,7 +3,11 @@
     Transport Pass Service
 {% endblock %}
 {% block content %}
-    <h2>Вітаємо!</h2><br/>
+    <h2>Вітаємо!</h2>
+    <div class="col-md-5">
+        <img src="{{ MEDIA_URL }}{{ 'mobilitytalks.png' }}" class="card-img-top" alt="QRCode">
+    </div>
     <h4>Для роботи в сервісі видачі перепусток у громадський транспорт необхідно авторизуватись.</h4><br/>
     <h2><a href="{% url 'login' %}" class="btn btn-outline-dark btn-lg">Авторизуватись</a></h2>
+
 {% endblock %}
